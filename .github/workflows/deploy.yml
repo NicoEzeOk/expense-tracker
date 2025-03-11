@@ -20,8 +20,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          npm install -g npm@latest
           npm install --legacy-peer-deps
+          npm ci
 
       - name: Build
         run: npm run build
