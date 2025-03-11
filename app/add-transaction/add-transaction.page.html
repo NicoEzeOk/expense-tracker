@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/transactions"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Add Transaction</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="transactionForm" (ngSubmit)="saveTransaction()">
+    <ion-list>
+      <ion-item>
+        <ion-segment formControlName="type">
+          <ion-segment-button value="income">
+            <ion-label>Income</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="expense">
+            <ion-label>Expense</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Amount</ion-label>
+        <ion-input type="number" formControlName="amount" placeholder="0.00"></ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="transactionForm.get('amount').invalid && transactionForm.get('amount').touched">
+        Please enter a valid amount
+      </ion-note>
+
+      <ion-item>
+        <ion-label position="stacked">Category</ion-label>
+        <ion-select formControlName="category">
+          <ion-select-option *ngFor="let category of getFilteredCategories()" [value]="category.name">
+            {{ category.name }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-note color="danger" *ngIf="transactionForm.get('category').invalid && transactionForm.get('category').touched">
+        Please select a category
+      </ion-note>
+
+      <ion-item>
+        <ion-label position="stacked">Description</ion-label>
+        <ion-input type="text" formControlName="description"></ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="transactionForm.get('description').invalid && transactionForm.get('description').touched">
+        Please enter a description
+      </ion-note>
+
+      <ion-item>
+        <ion-label position="stacked">Date</ion-label>
+        <ion-input type="date" formControlName="date"></ion-input>
+      </ion-item>
+      <ion-note color="danger" *ngIf="transactionForm.get('date').invalid && transactionForm.get('date').touched">
+        Please select a date
+      </ion-note>
+    </ion-list>
+
+    <div class="ion-padding">
+      <ion-button expand="block" type="submit" [disabled]="transactionForm.invalid || loading">
+        Save Transaction
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
+

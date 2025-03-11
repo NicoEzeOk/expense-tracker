@@ -1,0 +1,92 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ isLogin ? 'Login' : 'Register' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="logo-container">
+    <img src="assets/logo.png" alt="Expense Tracker Logo" />
+    <h1>Expense Tracker</h1>
+  </div>
+
+  <div *ngIf="isLogin">
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+      <div class="validation-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        Please enter a valid email address
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+      <div class="validation-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        Password must be at least 6 characters
+      </div>
+
+      <ion-button expand="block" type="submit" [disabled]="loginForm.invalid || loading">
+        Login
+      </ion-button>
+    </form>
+
+    <div class="social-login">
+      <ion-button expand="block" (click)="loginWithGoogle()" color="light">
+        <ion-icon name="logo-google" slot="start"></ion-icon>
+        Login with Google
+      </ion-button>
+    </div>
+
+    <div class="toggle-form">
+      <p>Don't have an account? <a (click)="toggleForm()">Register</a></p>
+    </div>
+  </div>
+
+  <div *ngIf="!isLogin">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <ion-item>
+        <ion-label position="floating">Username</ion-label>
+        <ion-input type="text" formControlName="username"></ion-input>
+      </ion-item>
+      <div class="validation-error" *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
+        Username is required
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="email" formControlName="email"></ion-input>
+      </ion-item>
+      <div class="validation-error" *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        Please enter a valid email address
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="password" formControlName="password"></ion-input>
+      </ion-item>
+      <div class="validation-error" *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        Password must be at least 6 characters
+      </div>
+
+      <ion-item>
+        <ion-label position="floating">Confirm Password</ion-label>
+        <ion-input type="password" formControlName="confirmPassword"></ion-input>
+      </ion-item>
+      <div class="validation-error" *ngIf="registerForm.get('confirmPassword')?.value !== registerForm.get('password')?.value && registerForm.get('confirmPassword')?.touched">
+        Passwords do not match
+      </div>
+
+      <ion-button expand="block" type="submit" [disabled]="registerForm.invalid || loading">
+        Register
+      </ion-button>
+    </form>
+
+    <div class="toggle-form">
+      <p>Already have an account? <a (click)="toggleForm()">Login</a></p>
+    </div>
+  </div>
+</ion-content>
+

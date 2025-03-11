@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Dashboard</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleDarkMode()">
+        <ion-icon [name]="darkMode ? 'sunny' : 'moon'"></ion-icon>
+      </ion-button>
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="user-welcome" *ngIf="profile">
+    <h2>Welcome, {{ profile.username }}!</h2>
+  </div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Summary</ion-card-title>
+      <ion-segment [(ngModel)]="dateFilter" (ionChange)="setDateFilter(dateFilter)">
+        <ion-segment-button value="week">
+          <ion-label>Week</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="month">
+          <ion-label>Month</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="year">
+          <ion-label>Year</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="all">
+          <ion-label>All</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </ion-card-header>
+    <ion-card-content>
+      <div class="summary-grid">
+        <div class="summary-item income">
+          <div class="summary-label">Income</div>
+          <div class="summary-value">{{ totalIncome | currency }}</div>
+        </div>
+        <div class="summary-item expense">
+          <div class="summary-label">Expense</div>
+          <div class="summary-value">{{ totalExpense | currency }}</div>
+        </div>
+        <div class="summary-item balance" [ngClass]="{'positive': balance >= 0, 'negative': balance < 0}">
+          <div class="summary-label">Balance</div>
+          <div class="summary-value">{{ balance | currency }}</div>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Income vs Expense</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #incomeExpenseChart></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Expenses by Category</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <canvas #categoryChart></canvas>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Recent Transactions</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="full">
+        <ion-item *ngFor="let transaction of transactions.slice(0, 5)">
+          <ion-label>
+            <h2>{{ transaction.description }}</h2>
+            <p>{{ transaction.category }} • {{ transaction.date | date }}</p>
+          </ion-label>
+          <ion-note slot="end" [color]="transaction.type === 'income' ? 'success' : 'danger'">
+            {{ transaction.type === 'income' ? '+' : '-' }}{{ transaction.amount | currency }}
+          </ion-note>
+        </ion-item>
+      </ion-list>
+      <ion-button expand="block" fill="clear" (click)="goToTransactions()">
+        View All Transactions
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="goToAddTransaction()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab-button color="light">
+      <ion-icon name="download"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="light" (click)="exportData('pdf')">
+        <ion-icon name="document-text"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light" (click)="exportData('excel')">
+        <ion-icon name="document"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="light" (click)="exportData('csv')">
+        <ion-icon name="document-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+</ion-content>
+
